@@ -212,7 +212,7 @@ pip install ntwork
 "channel_type": "weworktop"
 ```
 
-3.运行企微接口程序，基础版在项目文件夹”WeChat-AIChatbot-WinOnly\channel\weworktop\exe.win-amd64-3.10“内，启动成功后下一步
+3.管理员运行企微接口程序，基础版在项目文件夹”WeChat-AIChatbot-WinOnly\channel\weworktop\exe.win-amd64-3.10“内，启动成功后下一步
 
 4.运行 app.py
 
