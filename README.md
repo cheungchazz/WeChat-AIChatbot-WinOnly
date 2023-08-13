@@ -5,7 +5,20 @@
 项目支持的消息通道及功能如下：
 
 - [x] **WeworkTop**：PC端的企微个人号消息通道（开发中）
-- [x] **Wework：**PC端的企微个人号消息通道，依赖 [ntwork](https://github.com/chazzjimel/ntwork)，限制[WeCom_4.0.8.6027版本](https://dldir1.qq.com/wework/work_weixin/WeCom_4.0.8.6027.exe)，**只能在Win平台运行项目**。
+
+  **基础版：**
+
+  - [x] 发送消息：文本/图片/视频/文件/群聊@/链接卡片/GIF
+  - [x] 接收消息：All
+  - [x] 其他功能：同意加好友请求/创建群/添加好友入群/邀请好友入群
+  - [ ] 短板缺陷：无法发送语音条信息
+
+  **付费版：**
+
+  - [x] 全功能
+
+- [x] **Wework**：PC端的企微个人号消息通道，依赖 [ntwork](https://github.com/chazzjimel/ntwork)，限制[WeCom_4.0.8.6027版本](https://dldir1.qq.com/wework/work_weixin/WeCom_4.0.8.6027.exe)，**只能在Win平台运行项目**。
+
   - [x] 发送消息：文本/图片/视频/文件/群聊@/链接卡片/GIF
   - [x] 接收消息：All
   - [ ] 短板缺陷：无法发送语音条信息
@@ -153,7 +166,7 @@ pip3 install azure-cognitiveservices-speech
 ```bash
 python3 app.py
 ```
-### 2. PC本地部署ntchat（仅限window平台）
+### 2. PC本地部署wechat（仅限window平台）
 
 1.主项目安装主要依赖后，还需要安装ntchat依赖
 
@@ -171,7 +184,7 @@ pip install ntchat
 
 4.运行 app.py
 
-### 3. PC本地部署ntwork（仅限window平台）
+### 3. PC本地部署wework（仅限window平台）
 
 1.主项目安装主要依赖后，还需要安装ntchat依赖
 
@@ -199,13 +212,9 @@ pip install ntwork
 "channel_type": "weworktop"
 ```
 
-3.运行企微接口程序，输入key，启动成功后下一步
+3.运行企微接口程序，基础版在项目文件夹”WeChat-AIChatbot-WinOnly\channel\weworktop\exe.win-amd64-3.10“内，启动成功后下一步
 
 4.运行 app.py
-
-## 常见问题
-
-FAQs： <https://github.com/zhayujie/chatgpt-on-wechat/wiki/FAQs>
 
 ## **交流群**
 

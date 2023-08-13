@@ -12,17 +12,3 @@ langid # language detect
 
 #install plugin
 dulwich
-
-# wechaty
-wechaty>=0.10.7
-wechaty_puppet>=0.4.23
-pysilk_mod>=1.6.0 # needed by send voice
-
-# wechatmp wechatcom
-web.py
-wechatpy
-
-# chatgpt-tool-hub plugin
-
---extra-index-url https://pypi.python.org/simple
-chatgpt_tool_hub==0.4.6

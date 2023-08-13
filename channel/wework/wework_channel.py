@@ -131,16 +131,16 @@ def accept_friend_with_retries(wework_instance, user_id, corp_id):
     logger.debug(f'result:{result}')
 
 
-@wework.msg_register(ntwork.MT_RECV_FRIEND_MSG)
-def friend(wework_instance: ntwork.WeWork, message):
-    data = message["data"]
-    user_id = data["user_id"]
-    corp_id = data["corp_id"]
-    logger.info(f"接收到好友请求，消息内容：{data}")
-    delay = random.randint(1, 180)
-    threading.Timer(delay, accept_friend_with_retries, args=(wework_instance, user_id, corp_id)).start()
-
-    return None
+# @wework.msg_register(ntwork.MT_RECV_FRIEND_MSG)
+# def friend(wework_instance: ntwork.WeWork, message):
+#     data = message["data"]
+#     user_id = data["user_id"]
+#     corp_id = data["corp_id"]
+#     logger.info(f"接收到好友请求，消息内容：{data}")
+#     delay = random.randint(1, 180)
+#     threading.Timer(delay, accept_friend_with_retries, args=(wework_instance, user_id, corp_id)).start()
+#
+#     return None
 
 
 def get_with_retry(get_func, max_retries=5, delay=5):
