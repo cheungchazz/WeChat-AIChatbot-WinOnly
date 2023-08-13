@@ -94,7 +94,7 @@ class ChatChannel(Channel):
             if e_context.is_pass() or context is None:
                 return context
 
-            if cmsg.from_user_id == self.user_id and not config.get("trigger_by_self", True):
+            if cmsg.from_user_id == self.user_id and not config.get("trigger_by_self", False):
                 logger.debug("[WX]self message skipped")
                 return None
 
