@@ -13,11 +13,14 @@ from voice.voice import Voice
 
 class OpenaiVoice(Voice):
     def __init__(self):
-        openai.api_key = conf().get("open_ai_api_key")
+        openai.api_key = conf().get("voice_ai_api_key", conf().get("open_ai_api_key", ))
+        openai.api_base = conf().get("voice_ai_api_base", conf().get("open_ai_api_base", ))
 
     def voiceToText(self, voice_file):
         logger.debug("[Openai] voice file name={}".format(voice_file))
         try:
+            openai.api_key = conf().get("voice_ai_api_key", conf().get("open_ai_api_key", ))
+            openai.api_base = conf().get("voice_ai_api_base", conf().get("open_ai_api_base", ))
             file = open(voice_file, "rb")
             result = openai.Audio.transcribe("whisper-1", file)
             text = result["text"]
