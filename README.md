@@ -32,6 +32,18 @@
 
 # 更新日志
 
+>**2023.08.15：** 更新FastGpt接入逻辑，支持单群单知识库，未配置默认走全局base。
+>
+>```json
+>  {
+>      "fast_gpt": true,
+>      "fastgpt_list": {
+>        "R:108864****63985": "fastgpt-1aps*****pg47-64b16a*******181317",
+>        "R:107******373863": "fastgpt-1aps8*****gni1kpg47-64b168*****cd181267"
+>    	}
+>  }
+>```
+>
 >**2023.08.10：** 添加WeworkTop（企微个人号）消息通道。
 >
 >**2023.08.08：** 添加Wework（企微个人号）消息通道。
@@ -118,7 +130,11 @@ pip3 install azure-cognitiveservices-speech
   "channel_type": "wx",#通道类型，支持：{wx,wxy,terminal,wechatmp,wechatmp_service,wechatcom_app,ntchat,wework}
   "fast_gpt": false,                                           # 标识模型接口是否是fastgpt
   "ntchat_smart": false,                                    # 配置ntchat多开，为true时接管当前已登录微信，默认true
-  "wework_smart": false                                 # 配置wework多开，为true时接管当前已登录企业微信，默认true
+  "wework_smart": false,                                 # 配置wework多开，为true时接管当前已登录企业微信，默认true
+  "fastgpt_list": {
+        "R:108864****63985": "fastgpt-1aps*****pg47-64b16a*******181317",
+        "R:107******373863": "fastgpt-1aps8*****gni1kpg47-64b168*****cd181267"
+    }													# 每个群聊ID配置对应的key即可实现单群单知识库，未配置的默认
  }
 ```
 **配置说明：**
