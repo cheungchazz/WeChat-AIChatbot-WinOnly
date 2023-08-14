@@ -6,7 +6,7 @@ import time
 
 import requests
 import uuid
-
+from typing import Tuple
 from bridge.context import *
 from bridge.reply import *
 from channel.chat_channel import ChatChannel
@@ -84,7 +84,7 @@ def handle_message(cmsg, is_group):
     logger.debug(f"已用 WeworkTopChannel 处理完{'群聊' if is_group else '单聊'}消息")
 
 
-def convert_to_silk(media_path: str) -> tuple[str, int]:
+def convert_to_silk(media_path: str) -> Tuple[str, int]:
     """将输入的媒体文件转出为 silk, 并返回silk路径"""
     output_dir = os.path.join(os.getcwd(), "tmp")
     media = AudioSegment.from_file(media_path)
