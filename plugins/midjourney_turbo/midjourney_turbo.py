@@ -353,7 +353,7 @@ class MidjourneyTurbo(Plugin):
             logger.debug("[RP] submit_uv post_json={}".format(" ".join(submit_uv)))
 
             # 检查输入的格式是否正确
-            pattern = re.compile(r'^\d+\s[VU]\d$')
+            pattern = re.compile(r'^\d+\s[vVuU]\d$')
             if not pattern.match(submit_uv):
                 trigger = conf()['image_create_prefix'][0]
                 reply.type = ReplyType.ERROR
@@ -365,7 +365,7 @@ class MidjourneyTurbo(Plugin):
                 v_value_upper = v_value.upper()
                 # 确保UV值在U1-U4和V1-V4范围内
                 if v_value_upper in ["U1", "U2", "U3", "U4", "V1", "V2", "V3", "V4"]:
-                    simple_data = self.mm.get_simple(content=number + " " + v_value)
+                    simple_data = self.mm.get_simple(content=number + " " + v_value_upper)
 
                     # 发送任务提交消息
                     self.send_task_submission_message(e_context, messageId=simple_data["result"])
