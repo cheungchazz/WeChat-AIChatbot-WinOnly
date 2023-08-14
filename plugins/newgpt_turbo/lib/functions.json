@@ -1,0 +1,196 @@
+[
+    {
+        "name": "get_weather",
+        "description": "获取全球指定城市的天气信息,需明确查询天气才可调用",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "cityNm": {
+                    "type": "string",
+                    "description": "City names using Chinese characters, such as: 广州, 深圳, 东京, 伦敦"
+                }
+            },
+            "required": ["cityNm"]
+        }
+    },
+    {
+        "name": "get_morning_news",
+        "description": "获取当天的早报信息，无法获得历史早报信息",
+        "parameters": {
+            "type": "object",
+            "properties": {}
+        }
+    },
+    {
+        "name": "get_hotlist",
+        "description": "获取各种平台热榜信息，需明确指定热榜信息才可调用",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "type类型: '知乎':zhihu', '微博':weibo', '微信':weixin', '百度':baidu', '头条':toutiao', '163':163, 'xl', '36氪':36k, 'hitory', 'sspai', 'csdn', 'juejin', 'bilibili', 'douyin', '52pojie', 'v2ex', 'hostloc'"
+                }
+            },
+            "required": ["type"]
+        }
+    },
+    {
+        "name": "search",
+        "description": "默认搜索工具，谷歌和必应的搜索引擎，必须明确搜索才可以进行调用",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "提供需要搜索的关键词信息即可"
+                },
+                "count": {
+                    "type": "string",
+                    "description": "搜索页数,如无指定几页，默认2，最大值10"
+                }
+            },
+            "required": ["query", "count"]
+        }
+    },
+    {
+        "name": "get_oil_price",
+        "description": "获取中国全国油价信息，必须明确是油价才可调用",
+        "parameters": {
+            "type": "object",
+            "properties": {}
+        }
+    },
+    {
+        "name": "get_Constellation_analysis",
+        "description": "获取十二星座运势",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "star": {
+                    "type": "string",
+                    "description": "白羊座: aries, 金牛座: taurus, 双子座: gemini, 巨蟹座: cancer, 狮子座: leo, 处女座: virgo, 天秤座: libra, 天蝎座: scorpio, 射手座: sagittarius, 摩羯座: capricorn, 水瓶座: aquarius, 双鱼座: pisces"
+                }
+            },
+            "required": ["star"]
+        }
+    },
+    {
+        "name": "music_search",
+        "description": "音乐搜索，获得音乐信息",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "keyword": {
+                    "type": "string",
+                    "description": "需要搜索的音乐关键词信息"
+                }
+            },
+            "required": ["keyword"]
+        }
+    },
+    {
+        "name": "get_datetime",
+        "description": "获取全球指定城市实时日期时间和星期信息",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "city_en": {
+                    "type": "string",
+                    "description": "需要查询的城市小写英文名，英文名中间空格用-代替，如beijing，new-york"
+                }
+            },
+            "required": ["city_en"]
+        }
+    },
+    {
+        "name": "get_url",
+        "description": "访问并获取URL的内容，必须带URL才可调用",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "description": "需要访问的指定URL"
+                }
+            },
+            "required": ["url"]
+        }
+    },
+    {
+        "name": "get_stock_info",
+        "description": "获取上市股票实时信息的函数",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "stock_names": {
+                    "type": "string",
+                    "description": "股票中文名字简写，如果有多个，请空格隔开，不能有多余字符，如平安银行则传递平安、中新股份则传递中新"
+                }
+            },
+            "required": ["stock_names"]
+        }
+    },
+    {
+        "name": "search_bing_news",
+        "description": "实时新闻搜索引擎",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "提供需要搜索的新闻关键词信息"
+                },
+                "count": {
+                    "type": "string",
+                    "description": "搜索页数,如无指定几页，默认10，最大值50"
+                }
+            },
+            "required": ["query", "count"]
+        }
+    },
+    {
+        "name": "get_video_url",
+        "description": "通过原始URL解析可下载视频的URL函数",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "description": "提供需要解析的URL"
+                }
+            },
+            "required": ["url"]
+        }
+    },
+    {
+        "name": "get_contact_information",
+        "description": "开发者的联系信息，如：开发者是谁？怎么联系你的开发者？等此类可调用本函数",
+        "parameters": {
+            "type": "object",
+            "properties": {}
+        }
+    },
+    {
+        "name": "time_task_assistant",
+        "description": "根据用户的时间要求定时执行事件的函数",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "cycle": {
+                    "type": "string",
+                    "description": "循环的周期或者指定日期，没有指定日期则默认参数为今天！如今天、明天、后天、每天、工作日、每周三、YYYY-MM-DD的日期等"
+                },
+                "time": {
+                    "type": "string",
+                    "description": "分秒的时间格式"
+                },
+                "event": {
+                    "type": "string",
+                    "description": "用户需要执行的事件"
+                }
+            },
+            "required": ["cycle","time","event"]
+        }
+    }
+]
