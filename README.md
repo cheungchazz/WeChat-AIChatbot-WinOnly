@@ -134,7 +134,7 @@ pip3 install azure-cognitiveservices-speech
   "fastgpt_list": {
         "R:108864****63985": "fastgpt-1aps*****pg47-64b16a*******181317",
         "R:107******373863": "fastgpt-1aps8*****gni1kpg47-64b168*****cd181267"
-    }													# 每个群聊ID配置对应的key即可实现单群单知识库，未配置的默认
+    }							# 每个群聊ID配置对应的key即可实现单群单知识库，未配置的默认
  }
 ```
 **配置说明：**
