@@ -362,9 +362,9 @@ class MidjourneyTurbo(Plugin):
                 # 解析输入的值
                 number, v_value = submit_uv.split()
                 logger.debug("Parsed values: Number: {}, V value: {}".format(number, v_value))
-
+                v_value_upper = v_value.upper()
                 # 确保UV值在U1-U4和V1-V4范围内
-                if v_value in ["U1", "U2", "U3", "U4", "V1", "V2", "V3", "V4"]:
+                if v_value_upper in ["U1", "U2", "U3", "U4", "V1", "V2", "V3", "V4"]:
                     simple_data = self.mm.get_simple(content=number + " " + v_value)
 
                     # 发送任务提交消息
