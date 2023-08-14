@@ -20,9 +20,6 @@ from PIL import Image
 from plugins.midjourney_turbo.lib.midJourney_module import MidJourneyModule
 from bridge.context import ContextType
 from bridge.reply import Reply, ReplyType
-from channel.wework.wework_channel import WeworkChannel
-from channel.wechatnt.ntchat_channel import NtchatChannel
-from channel.weworktop.weworktop_channel import WeworkTopChannel
 from plugins import *
 from common.log import logger
 from common.expired_dict import ExpiredDict
@@ -35,12 +32,16 @@ def create_channel_object():
     channel_type = conf().get("channel_type")
     # 根据频道类型创建相应的频道对象
     if channel_type == 'wework':
+        from channel.wework.wework_channel import WeworkChannel
         return WeworkChannel(), ReplyType.IMAGE_URL, 2
     elif channel_type == 'ntchat':
+        from channel.wechatnt.ntchat_channel import NtchatChannel
         return NtchatChannel(), ReplyType.IMAGE_URL, 2
     elif channel_type == 'weworktop':
+        from channel.weworktop.weworktop_channel import WeworkTopChannel
         return WeworkTopChannel(), ReplyType.IMAGE_URL, 2
     else:
+        from channel.wechatnt.ntchat_channel import NtchatChannel
         return NtchatChannel(), ReplyType.IMAGE_URL, 2
 
 
