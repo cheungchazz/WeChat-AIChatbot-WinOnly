@@ -25,7 +25,7 @@
 ```json
 {
     "domain_name":"",    		# 填写Midjourney Proxy的域名和端口，如：http://127.0.0.1:8080
-    "api_key":"",   			# Midjourney Proxy如果有设置api_key，可以配置
+    "api_key":"",               # Midjourney Proxy如果有设置api_key，可以配置
     "image_ins":"/p",  	  		# 垫图指令，如无特殊需求可以默认
     "blend_ins":"/b",      	 	# 合图指令，如无特殊需求可以默认
     "change_ins":"/c",   		# 改变或放大指令，如无特殊需求可以默认（配合V/U）
@@ -39,6 +39,8 @@
     "lock":true,                # 是否开启使用次数限制 ！！未适配公众号！！
     "group_lock":false,			# 是否开启群聊使用限制，个人和群聊同步，即个人次数满了，群聊也不行  ！！未适配公众号！！
     "trial_lock":2,				# 使用次数的限制   ！！未适配公众号！！
+    "openai_key": "",           # 开启GPT优化且不是使用GPT对话的，需要单独配置
+    "openai_base": "",          # 开启GPT优化且不是使用GPT对话的，需要单独配置
     "complete_prompt": "\n\uD83E\uDD42任务完成！\n⌚\uFE0F任务耗时{start_finish},总耗时{submit_finish}\n--------------------------------\n\uD83C\uDD94任务ID:{id}\n--------------------------------\n\uD83D\uDCE7回复以下指令衍生或选图\uD83D\uDCE7\n\n画 /ins {id} V1\n画 /ins {id} V2\n画 /ins {id} V3\n画 /ins {id} V4\n画 /ins {id} U1\n画 /ins {id} U2\n画 /ins {id} U3\n画 /ins {id} U4\n\n--------------------------------\n\uD83D\uDC49V1～V4(衍生图片)\n\uD83D\uDC49U1～U4(确认选图)\n\u200D\uD83D\uDCBBTip：左上到右下依次为1234\n--------------------------------\n\uD83C\uDF20如果不出图片，请点击原图链接：\n{imgurl}"         # 画图完成提示词，注意占位符格式和变量名   
 }
 ```
