@@ -171,3 +171,15 @@ class MyApiClient:
                                    "conversation_id": conversation_id, "page_path": page_path, "title": title,
                                    "username": username}).json()
 
+    def invite_to_room(self, user_list: list, conversation_id: str):
+        """
+        添加或邀请好友进群
+        """
+        return requests.post(f"{self.base_url}/invite_to_room",
+                             json={"user_list": user_list, "conversation_id": conversation_id}).json()
+
+    def create_empty_room(self):
+        """
+        创建空外部群聊
+        """
+        return requests.post(f"{self.base_url}/create_empty_room", json={}).json()

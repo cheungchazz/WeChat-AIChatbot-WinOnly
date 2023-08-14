@@ -346,3 +346,7 @@ class WeworkTopChannel(ChatChannel):
             api_client.send_card(self.guid, receiver, reply.content)
         elif reply.type == ReplyType.FILE:
             api_client.send_file(self.guid, receiver, reply.content)
+        elif reply.type == ReplyType.InviteRoom:
+            member_list = [receiver]
+            api_client.invite_to_room(member_list, reply.content)
+            logger.info("[WX] sendInviteRoom={}, receiver={}".format(reply.content, receiver))

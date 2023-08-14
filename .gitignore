@@ -29,5 +29,7 @@ plugins/banwords/lib/__pycache__
 !plugins/hello
 !plugins/role
 !plugins/keyword
+!plugins/midjourney_turbo
+!plugins/newgpt_turbo
 test
 *.db

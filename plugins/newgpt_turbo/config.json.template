@@ -1,0 +1,22 @@
+{
+  "alapi_key":"",
+  "bing_subscription_key": "",
+  "google_api_key": "",
+  "google_cx_id": "",
+  "functions_openai_model":"gpt-4-0613",
+  "assistant_openai_model":"gpt-3.5-turbo-16k-0613",
+  "temperature":0.8,
+  "max_tokens": 8000,
+  "app_key":"",
+  "app_sign":"",
+  "google_base_url": "",
+  "open_ai_api_key": "",
+  "open_ai_api_base": "",
+  "prompt": "当前中国北京时间是：{time}，你是一个可以通过联网工具获取各种实时信息、也可以使用联网工具访问指定URL内容的AI助手,请根据联网工具返回的信息按照用户的要求'{content}'，告诉用户'{name}'想要的信息,要求排版美观，依据联网工具提供的内容进行描述！严禁胡编乱造！如果用户没有指定语言，默认中文！联网工具获得的内容如下：{function_response}",
+  "fastgpt": false,
+  "fastgpt_url": "",
+  "fastgpt_api_key": "",
+  "fast_kbid_list": {
+      "R:10758229542373863": "64b1684d33af8118cd18122d"
+  }
+}
