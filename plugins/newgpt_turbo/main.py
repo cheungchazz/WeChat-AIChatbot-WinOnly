@@ -5,9 +5,6 @@ import plugins
 from bridge.context import ContextType
 from bridge.reply import Reply, ReplyType
 from channel.chat_message import ChatMessage
-from channel.wechatnt.ntchat_channel import NtchatChannel
-from channel.wework.wework_channel import WeworkChannel
-from channel.weworktop.weworktop_channel import WeworkTopChannel
 from plugins import *
 from common.log import logger
 from plugins.newgpt_turbo.lib import function as fun, get_stock_info as stock, search_google as google
@@ -18,13 +15,17 @@ from bridge.bridge import Bridge
 def create_channel_object():
     channel_type = conf().get("channel_type")
     if channel_type == 'wework':
-        return WeworkChannel()
+        from channel.wework.wework_channel import WeworkChannel
+        return WeworkChannel(), ReplyType.IMAGE_URL, 2
     elif channel_type == 'ntchat':
-        return NtchatChannel()
+        from channel.wechatnt.ntchat_channel import NtchatChannel
+        return NtchatChannel(), ReplyType.IMAGE_URL, 2
     elif channel_type == 'weworktop':
-        return WeworkTopChannel()
+        from channel.weworktop.weworktop_channel import WeworkTopChannel
+        return WeworkTopChannel(), ReplyType.IMAGE_URL, 2
     else:
-        return NtchatChannel()
+        from channel.wechatnt.ntchat_channel import NtchatChannel
+        return NtchatChannel(), ReplyType.IMAGE_URL, 2
 
 
 def up_fastgpt(fastgpt_url, fastgpt_api_key, fast_kbid_list, a, q, receiver):
