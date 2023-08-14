@@ -201,6 +201,7 @@ class WeworkTopChannel(ChatChannel):
             logger.info(f"登录信息:>>>user_id:{self.user_id}>>>>>>>>name:{self.name}")
 
             contacts, rooms = api_client.get_external_contacts(self.guid, 1, 50000), api_client.get_rooms(self.guid)
+            logger.debug(f"获取到的群聊信息： \n {rooms}")
             if not contacts or not rooms:
                 raise Exception("获取contacts或rooms失败")
 
@@ -326,18 +327,19 @@ class WeworkTopChannel(ChatChannel):
             logger.info("[WX] sendVideo, receiver={}".format(receiver))
         elif reply.type == ReplyType.VOICE:
             directory = os.path.join(os.getcwd(), "tmp")
-            silk_filename = os.path.basename(reply.content)
-            wav_path = os.path.join(directory, silk_filename)
+            filename = os.path.basename(reply.content)
+            wav_path = os.path.join(directory, filename)
             silk_path, duration_s = convert_to_silk(wav_path)
             file_path = os.path.join(directory, silk_path)
             data_ = api_client.cdn_upload(self.guid, file_path, 5)
             logger.debug(f"data_:{data_}")
-            data = data_['data']
+            data = data_.get('data')
             if not data:
-                api_client.msg_send_text(self.guid, receiver, "抱歉，语音对话失败了，请再试一次")
+                api_client.send_file(self.guid, receiver, wav_path)
+                logger.info("[WX] sendVoice, receiver={}".format(receiver))
             elif duration_s > 60:
-                api_client.msg_send_text(self.guid, receiver,
-                                         "抱歉，语音太长了，无法发送，请勿使用语音调用插件或触发长文本回复，感谢理解！")
+                api_client.send_file(self.guid, receiver, wav_path)
+                logger.info("[WX] sendVoice, receiver={}".format(receiver))
             else:
                 api_client.send_voice(self.guid, receiver, data.get('file_id'), data.get('file_size'), duration_s,
                                       data.get('file_aes_key'), data.get('file_md5'))

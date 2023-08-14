@@ -39,3 +39,4 @@ plugins/banwords/lib/__pycache__
 !plugins/group_assistant/
 test
 *.db
+channel/weworktop/last_key.txt
