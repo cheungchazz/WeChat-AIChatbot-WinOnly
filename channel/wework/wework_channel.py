@@ -1,7 +1,9 @@
 import io
+import os
 import random
 import tempfile
 import threading
+os.environ['ntwork_LOG'] = "ERROR"
 import ntwork
 import requests
 import uuid
