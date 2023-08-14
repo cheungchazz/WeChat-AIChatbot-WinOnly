@@ -29,8 +29,13 @@ plugins/banwords/lib/__pycache__
 !plugins/hello
 !plugins/role
 !plugins/keyword
-!plugins/midjourney_turbo/**/
-!plugins/newgpt_turbo/**/
-!plugins/group_assistant/**/
+!plugins/midjourney_turbo/
+!plugins/midjourney_turbo/doc
+!plugins/midjourney_turbo/lib
+!plugins/newgpt_turbo/
+!plugins/newgpt_turbo/lib/
+!plugins/newgpt_turbo/lib/functions.json
+!plugins/newgpt_turbo/images
+!plugins/group_assistant/
 test
 *.db
