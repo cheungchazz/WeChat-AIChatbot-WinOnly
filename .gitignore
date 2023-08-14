@@ -31,5 +31,6 @@ plugins/banwords/lib/__pycache__
 !plugins/keyword
 !plugins/midjourney_turbo
 !plugins/newgpt_turbo
+!plugins/group_assistant
 test
 *.db
