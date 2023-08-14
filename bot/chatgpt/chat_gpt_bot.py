@@ -96,19 +96,12 @@ class ChatGPTBot(Bot, OpenAIImage):
                             # Handle the exception as needed
                             pass
 
-            if conf().get("fast_gpt", False):
-                if isgroup:
-                    api_key_list = conf().get("fastgpt_list")
-                    receiver = context.kwargs["receiver"]
-                    api_key = api_key_list[receiver]
-                    api_base = conf().get("open_ai_api_base")
-                else:
-                    api_key = conf().get("open_ai_api_key")
-                    api_base = conf().get("open_ai_api_base")
-            else:
-                api_key = context.get("openai_api_key")
-                api_base = conf().get("open_ai_api_base")
-            # api_key = context.get("openai_api_key")
+            api_key_list = conf().get("fastgpt_list", {})
+            receiver = context.kwargs.get("receiver")
+            api_key = api_key_list.get(receiver, conf().get("open_ai_api_key")) \
+                if conf().get("fast_gpt") and isgroup else conf().get("open_ai_api_key")
+            api_base = conf().get("open_ai_api_base")
+
             model = context.get("gpt_model")
             new_args = None
             if model:
