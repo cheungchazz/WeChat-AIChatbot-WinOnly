@@ -31,17 +31,13 @@ def run():
         sigterm_handler_wrap(signal.SIGTERM)
 
         # create channel
-        channel_name = conf().get("channel_type", "wx")
+        channel_name = conf().get("channel_type", "ntchat")
 
         if "--cmd" in sys.argv:
             channel_name = "terminal"
 
-        if channel_name == "wxy":
-            os.environ["WECHATY_LOG"] = "warn"
-            # os.environ['WECHATY_PUPPET_SERVICE_ENDPOINT'] = '127.0.0.1:9001'
-
         channel = channel_factory.create_channel(channel_name)
-        if channel_name in ["wx", "wxy", "terminal", "wechatmp", "wechatmp_service", "wechatcom_app", "ntchat", "wework", "weworktop"]:
+        if channel_name in ["ntchat", "wework", "weworktop"]:
             PluginManager().load_plugins()
 
         # startup channel
