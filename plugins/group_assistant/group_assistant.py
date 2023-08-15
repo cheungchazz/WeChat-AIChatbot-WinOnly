@@ -5,7 +5,6 @@ import os
 import plugins
 from bridge.context import ContextType
 from bridge.reply import Reply, ReplyType
-from common.log import logger
 from plugins import *
 from config import conf
 
@@ -26,14 +25,14 @@ class GroupAssistant(Plugin):
             curdir = os.path.dirname(__file__)
             # 配置文件的路径
             config_path = os.path.join(curdir, "config.json")
-            if_ntchat = conf().get("channel_type", "")
+            channel_type = conf().get("channel_type", "")
             # 如果配置文件不存在
             if not os.path.exists(config_path):
                 # 输出日志信息，配置文件不存在，将使用模板
-                logger.error('[GroupAssistant] 配置文件不存在，无法启动插件')
+                logger.error('[GroupAssistant] 配置文件不存在，法启动群聊邀请插件')
                 return
-            elif if_ntchat != "ntchat":
-                logger.error('[GroupAssistant] 不是ntchat通道，无法启动插件')
+            elif channel_type != "ntchat" or channel_type != "weworktop":
+                logger.error('[GroupAssistant] 不支持的消息通道，无法启动群聊邀请插件')
                 return
                 # 打开并读取配置文件
             with open(config_path, "r", encoding="utf-8") as f:
@@ -44,7 +43,7 @@ class GroupAssistant(Plugin):
             # 输出日志信息，表示插件已初始化
             logger.info("[GroupAssistant] inited")
         except Exception as e:  # 捕获所有的异常
-            logger.warn("[RP] init failed." + str(e))
+            logger.warn("[GroupAssistant] init failed." + str(e))
             # 抛出异常，结束程序
             raise e
 
