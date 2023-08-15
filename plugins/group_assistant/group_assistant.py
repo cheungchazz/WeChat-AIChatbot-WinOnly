@@ -58,7 +58,16 @@ class GroupAssistant(Plugin):
         logger.debug("[GroupAssistant] on_handle_context. content: %s" % content)
         reply = Reply()
 
-        if "进群" in content:
+        if content == "进群":
+            # 默认群聊的 ID，你可以根据实际情况进行设置
+            default_group_id = self.config.get("默认群聊")
+            if default_group_id:
+                reply.type = ReplyType.InviteRoom
+                reply.content = default_group_id
+            else:
+                reply.type = ReplyType.TEXT
+                reply.content = "请输入群名，如 进群：交流群"
+        elif "进群" in content:
             # 使用split函数，以"："或者":"为分隔符，将content分割成两部分
             parts = None
             if "：" in content:
