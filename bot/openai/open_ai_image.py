@@ -11,17 +11,20 @@ from config import conf
 # OPENAI提供的画图接口
 class OpenAIImage(object):
     def __init__(self):
-        openai.api_key = conf().get("open_ai_api_key")
+        self.api_key = conf().get("voice_openai_api_key", conf().get("open_ai_api_key"))
+        self.api_base = conf().get("voice_openai_api_base", conf().get("open_ai_api_base"))
         if conf().get("rate_limit_dalle"):
             self.tb4dalle = TokenBucket(conf().get("rate_limit_dalle", 50))
 
     def create_img(self, query, retry_count=0, api_key=None):
+        openai.api_key = self.api_key
+        openai.api_base = self.api_base
         try:
             if conf().get("rate_limit_dalle") and not self.tb4dalle.get_token():
                 return False, "请求太快了，请休息一下再问我吧"
             logger.info("[OPEN_AI] image_query={}".format(query))
             response = openai.Image.create(
-                api_key=api_key,
+                api_key=api_key or self.api_key,
                 prompt=query,  # 图片描述
                 n=1,  # 每次生成图片的数量
                 size=conf().get("image_create_size", "256x256"),  # 图片大小,可选有 256x256, 512x512, 1024x1024
@@ -40,3 +43,4 @@ class OpenAIImage(object):
         except Exception as e:
             logger.exception(e)
             return False, str(e)
+
