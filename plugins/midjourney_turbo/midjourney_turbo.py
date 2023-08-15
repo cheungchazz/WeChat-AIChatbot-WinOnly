@@ -85,7 +85,7 @@ def convert_base64(image):
 
 
 # 下载并压缩图片
-def download_and_compress_image(url, filename, quality=30):
+def download_and_compress_image(url, filename, quality):
     # 确定保存图片的目录
     directory = os.path.join(os.getcwd(), "tmp")
     # 如果目录不存在，则创建目录
@@ -173,6 +173,7 @@ class MidjourneyTurbo(Plugin):
                 self.complete_prompt = config.get("complete_prompt", "任务完成！")
                 self.openai_api_key = config.get("openai_key", conf().get("open_ai_api_key"))
                 self.openai_api_base = config.get("openai_base", conf().get("open_ai_api_base"))
+                self.picture_quality = conf().get("picture_quality", 30)
                 # 创建 MidJourneyModule 对象
                 self.mm = MidJourneyModule(api_key=self.api_key, domain_name=self.domain_name)
                 # 如果 domain_name 为空或包含"你的域名"，则抛出异常
@@ -270,8 +271,8 @@ class MidjourneyTurbo(Plugin):
             e_context['reply'] = reply
             # 记录异常日志
             logger.exception("[Midjourney_Turbo] exception: %s" % e)
-            # 设置事件动作为继续，即使发生异常，也继续进行后续处理
-            e_context.action = EventAction.CONTINUE
+            # 设置事件动作为pass
+            e_context.action = EventAction.BREAK_PASS
 
     def handle_image_create(self, e_context, user_id, content, reply):
         # 使用format_content方法格式化内容
@@ -750,7 +751,7 @@ class MidjourneyTurbo(Plugin):
             com_reply.content = new_url
         else:
             # 下载并压缩图片
-            image_path = download_and_compress_image(new_url, data['result'])
+            image_path = download_and_compress_image(new_url, data['result'], quality=self.picture_quality)
             image_storage = open(image_path, 'rb')
             com_reply.content = image_storage
         return com_reply
