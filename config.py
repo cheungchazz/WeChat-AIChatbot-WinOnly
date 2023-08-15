@@ -125,7 +125,7 @@ available_setting = {
     "ntchat_smart": True,  # 配置ntchat是否使用已登录微信，False为多开
     "wework_smart": True,  # 配置wework是否使用已登录微信，False为多开
     "fastgpt_list": {},  # 配置群聊单一fasgpt知识库
-    "wework_http": "http://127.0.0.1:8000",  # weworktop通道http接口地址
+    "wework_http": "http://127.0.0.1",  # weworktop通道http接口地址
     "wework_callback_port": 8001  # weworktop回调端口
 }
 
