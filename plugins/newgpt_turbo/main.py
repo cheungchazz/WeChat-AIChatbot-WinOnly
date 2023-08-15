@@ -68,7 +68,7 @@ class NewGpt(Plugin):
         logger.info(f"[newgpt_turbo] current directory: {curdir}")
         logger.info(f"加载配置文件: {config_path}")
         if not os.path.exists(config_path):
-            logger.info('[RP] 配置文件不存在，将使用config.json.template模板')
+            logger.info('[newgpt_turbo] 配置文件不存在，将使用config.json.template模板')
             config_path = os.path.join(curdir, "config.json.template")
             logger.info(f"[newgpt_turbo] config template path: {config_path}")
         try:
@@ -102,9 +102,9 @@ class NewGpt(Plugin):
                 logger.info("[newgpt_turbo] inited")
         except Exception as e:
             if isinstance(e, FileNotFoundError):
-                logger.warn(f"[RP] init failed, config.json not found.")
+                logger.warn(f"[newgpt_turbo] init failed, config.json not found.")
             else:
-                logger.warn("[RP] init failed." + str(e))
+                logger.warn("[newgpt_turbo] init failed." + str(e))
             raise e
 
     def on_handle_context(self, e_context: EventContext):
