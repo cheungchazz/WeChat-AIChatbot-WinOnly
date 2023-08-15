@@ -136,8 +136,7 @@ class ChatGPTBot(Bot, OpenAIImage):
             return reply
 
         elif context.type == ContextType.IMAGE_CREATE:
-            api_key = conf().get("voice_openai_api_key", conf().get("open_ai_api_key"))
-            ok, retstring = self.create_img(query, 0, api_key)
+            ok, retstring = self.create_img(query, 0)
             reply = None
             if ok:
                 reply = Reply(ReplyType.IMAGE_URL, retstring)
