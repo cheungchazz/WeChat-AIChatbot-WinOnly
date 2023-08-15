@@ -15,8 +15,8 @@ available_setting = {
     # openai apibase，当use_azure_chatgpt为true时，需要设置对应的api base
     "open_ai_api_base": "https://api.openai.com/v1",
     # 单独配置语音识别api
-    "voice_ai_api_key": "",
-    "voice_ai_api_base": "",
+    "voice_openai_api_key": "",
+    "voice_openai_api_base": "",
     "proxy": "",  # openai使用的代理
     # chatgpt模型， 当use_azure_chatgpt为true时，其名称为Azure上model deployment名称
     "model": "gpt-3.5-turbo",    # 还支持 gpt-3.5-turbo-16k, gpt-4, wenxin
