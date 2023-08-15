@@ -16,16 +16,16 @@ def create_channel_object():
     channel_type = conf().get("channel_type")
     if channel_type == 'wework':
         from channel.wework.wework_channel import WeworkChannel
-        return WeworkChannel(), ReplyType.IMAGE_URL, 2
+        return WeworkChannel()
     elif channel_type == 'ntchat':
         from channel.wechatnt.ntchat_channel import NtchatChannel
-        return NtchatChannel(), ReplyType.IMAGE_URL, 2
+        return NtchatChannel()
     elif channel_type == 'weworktop':
         from channel.weworktop.weworktop_channel import WeworkTopChannel
-        return WeworkTopChannel(), ReplyType.IMAGE_URL, 2
+        return WeworkTopChannel()
     else:
         from channel.wechatnt.ntchat_channel import NtchatChannel
-        return NtchatChannel(), ReplyType.IMAGE_URL, 2
+        return NtchatChannel()
 
 
 def up_fastgpt(fastgpt_url, fastgpt_api_key, fast_kbid_list, a, q, receiver):
