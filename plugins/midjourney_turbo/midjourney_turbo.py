@@ -169,11 +169,15 @@ class MidjourneyTurbo(Plugin):
                 self.trial_lock = config.get("trial_lock", 3)
                 self.lock = config.get("lock", False)
                 self.group_lock = config.get("group_lock", False)
+                self.group_list = config.get("group_name_list", [])
+                self.group_id_list = config.get("group_id_list", [])
+                self.name_list = config.get("name_list", [])
+                self.user_id_list = config.get("user_id_list", [])
                 self.local_data = threading.local()
                 self.complete_prompt = config.get("complete_prompt", "任务完成！")
                 self.openai_api_key = config.get("openai_key", conf().get("open_ai_api_key"))
                 self.openai_api_base = config.get("openai_base", conf().get("open_ai_api_base"))
-                self.picture_quality = conf().get("picture_quality", 30)
+                self.picture_quality = config.get("picture_quality", 30)
                 # 创建 MidJourneyModule 对象
                 self.mm = MidJourneyModule(api_key=self.api_key, domain_name=self.domain_name)
                 # 如果 domain_name 为空或包含"你的域名"，则抛出异常
@@ -183,15 +187,9 @@ class MidjourneyTurbo(Plugin):
             self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
             # 输出日志信息，表示插件已初始化
             logger.info("[Midjourney_Turbo] inited")
-        except Exception as e:  # 捕获所有的异常
-            if isinstance(e, FileNotFoundError):  # 如果是 FileNotFoundError 异常
-                # 输出日志信息，表示配置文件未找到
-                logger.warn(f"[Midjourney_Turbo] init failed, config.json not found.")
-            else:  # 如果是其他类型的异常
-                # 输出日志信息，表示初始化失败，并附加异常信息
-                logger.warn("[Midjourney_Turbo] init failed." + str(e))
-            # 抛出异常，结束程序
-            raise e
+        except FileNotFoundError:  # 配置文件未找到的特定情况
+            logger.warn(f"[Midjourney_Turbo] init failed, config.json not found.")
+            raise  # 抛出异常，结束程序
 
     # 这个方法是一个事件处理方法，当插件接收到指定类型的事件时，会调用这个方法来处理
     def on_handle_context(self, e_context: EventContext):
@@ -209,27 +207,39 @@ class MidjourneyTurbo(Plugin):
             content = e_context['context'].content[:]
 
             if e_context['context'].type == ContextType.IMAGE_CREATE:
+                context = e_context['context']
                 logger.debug("收到 IMAGE_CREATE 事件.")
                 if self.lock:
                     logger.debug("使用限制已开启.")
                     if e_context["context"]["isgroup"]:
                         if self.group_lock:
-                            continue_a, continue_b, remaining = self.check_and_update_usage_limit(
-                                trial_lock=self.trial_lock,
-                                user_id=user_id,
-                                db_conn=self.user_db)
+                            msg = context.kwargs.get('msg')
+                            group_name = msg.other_user_nickname
+                            group_id = msg.other_user_id
+                            if group_name in self.group_list or group_id in self.group_id_list:
+                                continue_a, continue_b, remaining = True, False, ""
+                                logger.debug("群组白名单，无限制.")
+                            else:
+                                continue_a, continue_b, remaining = self.check_and_update_usage_limit(
+                                    trial_lock=self.trial_lock,
+                                    user_id=user_id,
+                                    db_conn=self.user_db)
                             logger.debug(
                                 f"群聊锁已开启. continue_a={continue_a}, continue_b={continue_b}, remaining={remaining}")
                         else:
                             continue_a, continue_b, remaining = True, False, ""
-                            logger.debug("群聊锁未开启，直接放行.")
+                            logger.debug("群聊锁未开启，无限制.")
                     else:
-                        continue_a, continue_b, remaining = self.check_and_update_usage_limit(
-                            trial_lock=self.trial_lock,
-                            user_id=user_id,
-                            db_conn=self.user_db)
-                        logger.debug(
-                            f"非群聊上下文. continue_a={continue_a}, continue_b={continue_b}, remaining={remaining}")
+                        msg = context.kwargs.get('msg')
+                        user_name = msg.from_user_nickname
+                        if user_name in self.name_list or user_id in self.user_id_list:
+                            continue_a, continue_b, remaining = True, False, ""
+                            logger.debug("个人白名单，无限制.")
+                        else:
+                            continue_a, continue_b, remaining = self.check_and_update_usage_limit(
+                                trial_lock=self.trial_lock,
+                                user_id=user_id,
+                                db_conn=self.user_db)
                 else:
                     continue_a, continue_b, remaining = True, False, ""
                     logger.debug("使用限制未开启.")

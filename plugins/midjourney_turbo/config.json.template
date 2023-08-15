@@ -12,5 +12,9 @@
     "short_url_api":"",
     "split_url":false,
     "picture_quality":30,
+    "group_name_list": ["ChatGPT测试群"],
+    "group_id_list": [""],
+    "name_list": ["跃迁"],
+    "user_id_list": [""],
     "complete_prompt": "\n\uD83E\uDD42任务完成！\n⌚\uFE0F任务耗时{start_finish},总耗时{submit_finish}\n--------------------------------\n\uD83C\uDD94任务ID:{id}\n--------------------------------\n\uD83D\uDCE7回复以下指令衍生或选图\uD83D\uDCE7\n\n画 /ins {id} V1\n画 /ins {id} V2\n画 /ins {id} V3\n画 /ins {id} V4\n画 /ins {id} U1\n画 /ins {id} U2\n画 /ins {id} U3\n画 /ins {id} U4\n\n--------------------------------\n\uD83D\uDC49V1～V4(衍生图片)\n\uD83D\uDC49U1～U4(确认选图)\n\u200D\uD83D\uDCBBTip：左上到右下依次为1234\n--------------------------------\n\uD83C\uDF20如果不出图片，请点击原图链接：\n{imgurl}"
 }
