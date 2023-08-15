@@ -140,7 +140,7 @@ class MidjourneyTurbo(Plugin):
             # 如果配置文件不存在
             if not os.path.exists(config_path):
                 # 输出日志信息，配置文件不存在，将使用模板
-                logger.info('[RP] 配置文件不存在，将使用config.json.template模板')
+                logger.info('[Midjourney_Turbo] 配置文件不存在，将使用config.json.template模板')
                 # 模板配置文件的路径
                 config_path = os.path.join(curdir, "config.json.template")
             # 打开并读取配置文件
@@ -151,7 +151,7 @@ class MidjourneyTurbo(Plugin):
                 dbdir = os.path.join(rootdir, "db")
                 if not os.path.exists(dbdir):
                     os.mkdir(dbdir)
-                logger.info("[verify_turbo] inited")
+                logger.info("[Midjourney_Turbo] inited")
                 user_db = os.path.join(dbdir, "user.db")
                 self.user_db = sqlite3.connect(user_db, check_same_thread=False)
                 # 创建频道对象
@@ -181,14 +181,14 @@ class MidjourneyTurbo(Plugin):
             # 设置事件处理函数
             self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
             # 输出日志信息，表示插件已初始化
-            logger.info("[RP] inited")
+            logger.info("[Midjourney_Turbo] inited")
         except Exception as e:  # 捕获所有的异常
             if isinstance(e, FileNotFoundError):  # 如果是 FileNotFoundError 异常
                 # 输出日志信息，表示配置文件未找到
-                logger.warn(f"[RP] init failed, config.json not found.")
+                logger.warn(f"[Midjourney_Turbo] init failed, config.json not found.")
             else:  # 如果是其他类型的异常
                 # 输出日志信息，表示初始化失败，并附加异常信息
-                logger.warn("[RP] init failed." + str(e))
+                logger.warn("[Midjourney_Turbo] init failed." + str(e))
             # 抛出异常，结束程序
             raise e
 
@@ -197,10 +197,8 @@ class MidjourneyTurbo(Plugin):
         # 如果事件的类型不是图片创建或图片，则直接返回，不进行后续处理
         if e_context['context'].type not in [ContextType.IMAGE_CREATE, ContextType.IMAGE]:
             return
-        e_context.action = EventAction.BREAK_PASS
-        return
         # 将图片请求内容的日志输出
-        logger.info("[RP] image_query={}".format(e_context['context'].content))
+        logger.info("[Midjourney_Turbo] image_query={}".format(e_context['context'].content))
         # 创建一个回复对象
         reply = Reply()
         try:
@@ -267,11 +265,11 @@ class MidjourneyTurbo(Plugin):
             # 设置回复类型为错误
             reply.type = ReplyType.ERROR
             # 设置回复内容为异常信息
-            reply.content = "[RP] " + str(e)
+            reply.content = "[Midjourney_Turbo] " + str(e)
             # 设置回复
             e_context['reply'] = reply
             # 记录异常日志
-            logger.exception("[RP] exception: %s" % e)
+            logger.exception("[Midjourney_Turbo] exception: %s" % e)
             # 设置事件动作为继续，即使发生异常，也继续进行后续处理
             e_context.action = EventAction.CONTINUE
 
@@ -298,7 +296,7 @@ class MidjourneyTurbo(Plugin):
                 params["prompt"] += f"{prompt}"
 
             # 记录日志
-            logger.info("[RP] params={}".format(params))
+            logger.info("[Midjourney_Turbo] params={}".format(params))
 
             # 设置回复类型为INFO，内容为提示用户发送图片的消息
             reply.type = ReplyType.INFO
@@ -306,7 +304,7 @@ class MidjourneyTurbo(Plugin):
 
         # 处理合图的情况
         elif self.blend_ins in prompt:
-            logger.info("[RP] blend_ins prompt={}".format(prompt))
+            logger.info("[Midjourney_Turbo] blend_ins prompt={}".format(prompt))
 
             try:
                 # 从用户的输入中获取需要合成的图片数量
@@ -343,7 +341,7 @@ class MidjourneyTurbo(Plugin):
                 params["prompt"] += f"{prompt}"
 
             # 记录日志
-            logger.info("[RP] params={}".format(params))
+            logger.info("[Midjourney_Turbo] params={}".format(params))
 
             # 设置回复类型为INFO，内容为提示用户发送指定数量的图片的消息
             reply.type = ReplyType.INFO
@@ -351,7 +349,7 @@ class MidjourneyTurbo(Plugin):
         elif self.change_ins in prompt:  # 处理变换，示例输入：/c V/U 1-4
             # 处理提交的UV值
             submit_uv = ' '.join(prompt.replace(self.change_ins, "").strip().split())
-            logger.debug("[RP] submit_uv post_json={}".format(" ".join(submit_uv)))
+            logger.debug("[Midjourney_Turbo] submit_uv post_json={}".format(" ".join(submit_uv)))
 
             # 检查输入的格式是否正确
             pattern = re.compile(r'^\d+\s[vVuU]\d$')
