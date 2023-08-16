@@ -114,6 +114,7 @@ class WeworkMessage(ChatMessage):
                 self.ctype = ContextType.JOIN_GROUP
                 member_list = message['data']['member_list']
                 self.actual_user_nickname = member_list[0]['name']
+                self.actual_user_id = member_list[0]['user_id']
                 self.content = f"{self.actual_user_nickname}加入了群聊！"
                 directory = os.path.join(os.getcwd(), "tmp")
                 rooms = self.api_client.get_rooms(guid)
@@ -170,7 +171,8 @@ class WeworkMessage(ChatMessage):
                         logger.debug(f"Wechaty message {self.msg_id} includes at")
                         self.is_at = True
 
-                    self.actual_user_id = data.get("sender")
+                    if not self.actual_user_id:
+                        self.actual_user_id = data.get("sender")
                     self.actual_user_nickname = sender_name if self.ctype != ContextType.JOIN_GROUP else self.actual_user_nickname
                 else:
                     logger.error("群聊消息中没有找到 conversation_id 或 room_conversation_id")
