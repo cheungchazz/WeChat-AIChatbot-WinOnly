@@ -40,3 +40,4 @@ plugins/banwords/lib/__pycache__
 test
 *.db
 channel/weworktop/last_key.txt
+plugins/godcmd/godcmd.py
