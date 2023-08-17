@@ -1,10 +1,7 @@
 # encoding:utf-8
 
-import json
 import logging
-import os
 import random
-import sqlite3
 import string
 from typing import Tuple
 
@@ -13,8 +10,7 @@ from bridge.bridge import Bridge
 from bridge.context import ContextType
 from bridge.reply import Reply, ReplyType
 from common import const
-from common.log import logger
-from config import conf, load_config, global_config
+from config import load_config, global_config
 from plugins import *
 
 # 定义指令集
@@ -127,8 +123,44 @@ ADMIN_COMMANDS = {
     "debug": {
         "alias": ["debug", "调试模式", "DEBUG"],
         "desc": "开启机器调试日志",
-    }
+    },
 }
+
+
+# 定义帮助函数
+def get_help_text(isadmin, isgroup):
+    help_text = "通用指令：\n"
+    for cmd, info in COMMANDS.items():
+        if cmd == "auth":  # 不提示认证指令
+            continue
+        if cmd == "id" and conf().get("channel_type", "wx") not in ["wxy", "wechatmp"]:
+            continue
+        alias = ["#" + a for a in info["alias"][:1]]
+        help_text += f"{','.join(alias)} "
+        if "args" in info:
+            args = [a for a in info["args"]]
+            help_text += f"{' '.join(args)}"
+        help_text += f": {info['desc']}\n"
+
+    # 插件指令
+    plugins = PluginManager().list_plugins()
+    help_text += "\n目前可用插件有："
+    for plugin in plugins:
+        if plugins[plugin].enabled and not plugins[plugin].hidden:
+            namecn = plugins[plugin].namecn
+            help_text += "\n%s:" % namecn
+            help_text += PluginManager().instances[plugin].get_help_text(verbose=False).strip()
+
+    if ADMIN_COMMANDS and isadmin:
+        help_text += "\n\n管理员指令：\n"
+        for cmd, info in ADMIN_COMMANDS.items():
+            alias = ["#" + a for a in info["alias"][:1]]
+            help_text += f"{','.join(alias)} "
+            if "args" in info:
+                args = [a for a in info["args"]]
+                help_text += f"{' '.join(args)}"
+            help_text += f": {info['desc']}\n"
+    return help_text
 
 
 @plugins.register(
@@ -143,20 +175,13 @@ class Godcmd(Plugin):
     def __init__(self):
         super().__init__()
 
-        curdir = os.path.dirname(__file__)
-        config_path = os.path.join(curdir, "config.json")
-        rootdir = os.path.dirname(os.path.dirname(curdir))
-        dbdir = os.path.join(rootdir, "db")
-        if not os.path.exists(dbdir):
-            os.mkdir(dbdir)
-        gconf = None
-        if not os.path.exists(config_path):
-            gconf = {"password": "", "admin_users": []}
-            with open(config_path, "w") as f:
-                json.dump(gconf, f, indent=4)
-        else:
-            with open(config_path, "r") as f:
-                gconf = json.load(f)
+        config_path = os.path.join(os.path.dirname(__file__), "config.json")
+        gconf = super().load_config()
+        if not gconf:
+            if not os.path.exists(config_path):
+                gconf = {"password": "", "admin_users": []}
+                with open(config_path, "w") as f:
+                    json.dump(gconf, f, indent=4)
         if gconf["password"] == "":
             self.temp_password = "".join(random.sample(string.digits, 4))
             logger.info("[Godcmd] 因未设置口令，本次的临时口令为%s。" % self.temp_password)
@@ -168,8 +193,7 @@ class Godcmd(Plugin):
                 custom_command = custom_command[1:]
                 if custom_command and custom_command not in COMMANDS["reset"]["alias"]:
                     COMMANDS["reset"]["alias"].append(custom_command)
-        user_db = os.path.join(dbdir, "user.db")
-        self.user_db = sqlite3.connect(user_db, check_same_thread=False)
+
         self.password = gconf["password"]
         self.admin_users = gconf["admin_users"]  # 预存的管理员账号，这些账号不需要认证。itchat的用户名每次都会变，不可用
         self.isrunning = True  # 机器人是否运行中
@@ -214,14 +238,66 @@ class Godcmd(Plugin):
                 cmd = next(c for c, info in COMMANDS.items() if cmd in info["alias"])
                 if cmd == "auth":
                     ok, result = self.authenticate(user, args, isadmin, isgroup)
-                elif cmd == "id":
-                    ok, result = True, user
                 elif cmd == "help" or cmd == "helpp":
                     if len(args) == 0:
-                        ok, result = True, self.get_help_text(isadmin, isgroup)
+                        ok, result = True, get_help_text(isadmin, isgroup)
                     else:
-                        e_context.action = EventAction.BREAK_PASS
-                        return
+                        # This can replace the helpp command
+                        plugins = PluginManager().list_plugins()
+                        query_name = args[0].upper()
+                        # search name and namecn
+                        for name, plugincls in plugins.items():
+                            if not plugincls.enabled:
+                                continue
+                            if query_name == name or query_name == plugincls.namecn:
+                                ok, result = True, PluginManager().instances[name].get_help_text(isgroup=isgroup, isadmin=isadmin, verbose=True)
+                                break
+                        if not ok:
+                            result = "插件不存在或未启用"
+                elif cmd == "id":
+                    ok, result = True, user
+                elif cmd == "set_openai_api_key":
+                    if len(args) == 1:
+                        user_data = conf().get_user_data(user)
+                        user_data["openai_api_key"] = args[0]
+                        ok, result = True, "你的OpenAI私有api_key已设置为" + args[0]
+                    else:
+                        ok, result = False, "请提供一个api_key"
+                elif cmd == "reset_openai_api_key":
+                    try:
+                        user_data = conf().get_user_data(user)
+                        user_data.pop("openai_api_key")
+                        ok, result = True, "你的OpenAI私有api_key已清除"
+                    except Exception as e:
+                        ok, result = False, "你没有设置私有api_key"
+                elif cmd == "set_gpt_model":
+                    if len(args) == 1:
+                        user_data = conf().get_user_data(user)
+                        user_data["gpt_model"] = args[0]
+                        ok, result = True, "你的GPT模型已设置为" + args[0]
+                    else:
+                        ok, result = False, "请提供一个GPT模型"
+                elif cmd == "gpt_model":
+                    user_data = conf().get_user_data(user)
+                    model = conf().get("model")
+                    if "gpt_model" in user_data:
+                        model = user_data["gpt_model"]
+                    ok, result = True, "你的GPT模型为" + str(model)
+                elif cmd == "reset_gpt_model":
+                    try:
+                        user_data = conf().get_user_data(user)
+                        user_data.pop("gpt_model")
+                        ok, result = True, "你的GPT模型已重置"
+                    except Exception as e:
+                        ok, result = False, "你没有设置私有GPT模型"
+                elif cmd == "reset":
+                    if bottype in [const.OPEN_AI, const.CHATGPT, const.CHATGPTONAZURE, const.LINKAI]:
+                        bot.sessions.clear_session(session_id)
+                        channel.cancel_session(session_id)
+                        ok, result = True, "会话已重置"
+                    else:
+                        ok, result = False, "当前对话机器人不支持重置会话"
+                logger.debug("[Godcmd] command: %s by %s" % (cmd, user))
             elif any(cmd in info["alias"] for info in ADMIN_COMMANDS.values()):
                 if isadmin:
                     if isgroup:
@@ -317,29 +393,20 @@ class Godcmd(Plugin):
                                 ok, result = False, "请提供插件名"
                             else:
                                 ok, result = PluginManager().update_plugin(args[0])
-                        elif cmd == "verify":
-                            ok, result = self.generate_activation_code(args)
-                        elif cmd == "delete":
-                            ok, result = self.delete_activation_code(args)
                         logger.debug("[Godcmd] admin command: %s by %s" % (cmd, user))
-
                 else:
-                    ok, result = False, None
+                    ok, result = False, "需要管理员权限才能执行该指令"
             else:
                 trigger_prefix = conf().get("plugin_trigger_prefix", "$")
                 if trigger_prefix == "#":  # 跟插件聊天指令前缀相同，继续递交
                     return
-                ok, result = False, "string"
+                ok, result = False, f"未知指令：{cmd}\n查看指令列表请输入#help \n"
 
             reply = Reply()
-            if ok and result:
+            if ok:
                 reply.type = ReplyType.INFO
-            elif not result or result == "string":
-                e_context.action = EventAction.BREAK_PASS
-                return
             else:
                 reply.type = ReplyType.ERROR
-
             reply.content = result
             e_context["reply"] = reply
 
@@ -370,103 +437,4 @@ class Godcmd(Plugin):
             return False, "认证失败"
 
     def get_help_text(self, isadmin=False, isgroup=False, **kwargs):
-        if isgroup:
-            return
-        if ADMIN_COMMANDS and isadmin:
-            help_text = "管理员指令：\n"
-            for cmd, info in ADMIN_COMMANDS.items():
-                alias = ["#" + a for a in info["alias"][:1]]
-                help_text += f"{','.join(alias)} "
-                if "args" in info:
-                    args = [a for a in info["args"]]
-                    help_text += f"{' '.join(args)}"
-                help_text += f": {info['desc']}\n"
-            return help_text
-        else:
-            return
-
-    def generate_activation_code(self, args):
-        # 检查 args 的长度
-        if len(args) < 1 > 2:
-            return False, "命令有误，请输入有效天数和需要的数量，如 30 10！"
-
-        try:
-            # 获取并检查有效天数
-            valid_days = int(args[0])
-            if valid_days <= 0:
-                raise ValueError
-
-            # 获取并检查生成数量
-            count = int(args[1]) if len(args) > 1 else 1
-            if count <= 0:
-                raise ValueError
-
-        except ValueError:
-            return False, "命令有误，请输入有效天数和需要的数量，如 30 10！"
-
-        # 确保表存在
-        cur = self.user_db.cursor()
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS wechat_users (
-                UserID TEXT,
-                ActivationCode TEXT UNIQUE,
-                Invitation code TEXT,
-                ValidDays INTEGER,
-                ExpiryDate DATETIME,
-                LastUsedTime DATETIME
-            )
-        """)
-        self.user_db.commit()
-
-        # 生成激活码
-        activation_codes = []
-        for _ in range(count):
-            # 生成一个随机的、包含大小写字母和数字的 16 位字符串作为激活码
-            activation_code = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
-
-            # 将激活码和有效天数添加到数据库
-            cur.execute("""
-                INSERT INTO wechat_users (ActivationCode, ValidDays)
-                VALUES (?, ?)
-            """, (activation_code, valid_days))
-            self.user_db.commit()
-
-            # 将生成的激活码添加到列表中
-            activation_codes.append(activation_code)
-
-        # 将每个激活码添加 "激活码：" 前缀，并将所有激活码连接成一个字符串
-        activation_codes_str = '\n'.join(["激活码：" + code for code in activation_codes])
-
-        # 返回生成的激活码
-        return True, activation_codes_str
-
-    def delete_activation_code(self, args):
-        # 检查 args 的长度
-        if len(args) == 0:
-            return False, "命令有误，请输入要删除的授权码！"
-
-        # 获取要删除的激活码
-        activation_code = args[0]
-
-        # 在数据库中查找该激活码
-        cur = self.user_db.cursor()
-        cur.execute("""
-            SELECT * FROM wechat_users
-            WHERE ActivationCode = ?
-        """, (activation_code,))
-
-        data = cur.fetchone()
-
-        # 如果未找到激活码，返回"授权码不存在或输入有误！"
-        if data is None:
-            return False, "授权码不存在或输入有误！"
-
-        # 如果找到激活码，从数据库中删除
-        cur.execute("""
-            DELETE FROM wechat_users
-            WHERE ActivationCode = ?
-        """, (activation_code,))
-
-        self.user_db.commit()
-
-        return True, "授权码删除成功！"
+        return get_help_text(isadmin, isgroup)
