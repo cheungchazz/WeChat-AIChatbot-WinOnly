@@ -42,7 +42,7 @@ class MyApiClient:
         """
         获取群列表
         """
-        return requests.post(f"{self.base_url}/rooms", json={"guid": guid}).json()
+        return requests.post(f"{self.base_url}/rooms/rooms", json={"guid": guid}).json()
 
     def get_room_members(self, guid: str, conversation_id: str, page_num: int = 1, page_size: int = 500):
         """
