@@ -255,6 +255,8 @@ class ChatChannel(Channel):
                     pass
                 elif reply.type == ReplyType.InviteRoom:
                     pass
+                elif reply.type == ReplyType.TEXT_:
+                    pass
                 else:
                     logger.error("[WX] unknown reply type: {}".format(reply.type))
                     return
