@@ -20,7 +20,6 @@ plugins/**/
 !plugins/bdunit
 !plugins/dungeon
 !plugins/finish
-!plugins/godcmd
 !plugins/tool
 !plugins/banwords
 !plugins/banwords/**/
