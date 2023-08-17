@@ -288,7 +288,7 @@ class WeworkTopChannel(ChatChannel):
                 api_client.send_room_at(self.guid, receiver, new_content, wxid_list)
             else:
                 api_client.msg_send_text(self.guid, receiver, reply.content)
-            logger.info("[WX] sendMsg={}, receiver={}".format(reply, receiver))
+                logger.info("[WX] sendMsg={}, receiver={}".format(reply, receiver))
         elif reply.type == ReplyType.ERROR or reply.type == ReplyType.INFO:
             api_client.msg_send_text(self.guid, receiver, reply.content)
             logger.info("[WX] sendMsg={}, receiver={}".format(reply, receiver))
