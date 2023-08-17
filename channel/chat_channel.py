@@ -257,6 +257,8 @@ class ChatChannel(Channel):
                     pass
                 elif reply.type == ReplyType.TEXT_:
                     pass
+                elif reply.type == ReplyType.MINIAPP:
+                    pass
                 else:
                     logger.error("[WX] unknown reply type: {}".format(reply.type))
                     return

@@ -353,3 +353,17 @@ class WeworkTopChannel(ChatChannel):
             member_list = [receiver_id]
             api_client.invite_to_room(self.guid, member_list, reply.content)
             logger.info("[WX] sendInviteRoom={}, receiver={}".format(reply.content, receiver))
+        elif reply.type == ReplyType.MINIAPP:
+            logger.debug(reply.content)
+            aes_key = reply.content["aes_key"]
+            file_id = reply.content["file_id"]
+            size = reply.content["size"]
+            appicon = reply.content["appicon"]
+            appid = reply.content["appid"]
+            appname = reply.content["appname"]
+            page_path = reply.content["page_path"]
+            title = reply.content["title"]
+            username = reply.content["username"]
+            api_client.send_miniapp(self.guid, receiver, aes_key, file_id, size, appicon, appid, appname, page_path,
+                                    title, username)
+            logger.info("[WX] sendInviteRoom={}, receiver={}".format(reply.content, receiver))

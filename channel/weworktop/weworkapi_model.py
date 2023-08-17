@@ -148,7 +148,7 @@ class MyApiClient:
         return requests.post(f"{self.base_url}/contacts/accept",
                              json={"guid": guid, "user_id": user_id, "corp_id": corp_id}).json()
 
-    def send_miniapp(self, guid: str, aes_key, file_id, size, appicon, appid, appname, conversation_id, page_path, title,
+    def send_miniapp(self, guid: str, conversation_id, aes_key, file_id, size, appicon, appid, appname, page_path, title,
                      username):
         """
         发送小程序
