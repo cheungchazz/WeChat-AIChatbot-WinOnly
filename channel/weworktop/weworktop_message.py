@@ -140,14 +140,14 @@ class WeworkMessage(ChatMessage):
                     "Unsupported message type: guid:{} MsgType:{}".format(guid, message["type"]))
 
             login_info = self.login_info_['data']
-            nickname = login_info['nickname']
+            nickname = login_info['nickname'] if login_info['nickname'] else login_info['username']
             user_id = login_info['user_id']
 
             sender_id = data.get('sender')
             conversation_id = data.get('conversation_id')
             sender_name = data.get("sender_name")
 
-            self.from_user_id = user_id if sender_id == user_id else conversation_id
+            self.from_user_id = user_id if sender_id == user_id else sender_id
             self.from_user_nickname = nickname if sender_id == user_id else sender_name
             self.to_user_id = user_id
             self.to_user_nickname = nickname
