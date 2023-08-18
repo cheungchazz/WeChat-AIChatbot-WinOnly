@@ -11,13 +11,14 @@ config.json
 QR.png
 nohup.out
 tmp
+plugins/keyword/**/
+plugins/godcmd/**/
 plugins.json
 itchat.pkl
 *.log
 user_datas.pkl
 chatgpt_tool_hub/
 plugins/**/
-godcmd
 !plugins/bdunit
 !plugins/dungeon
 !plugins/finish
@@ -28,7 +29,6 @@ plugins/banwords/__pycache__
 plugins/banwords/lib/__pycache__
 !plugins/hello
 !plugins/role
-!plugins/keyword
 !plugins/midjourney_turbo/
 !plugins/midjourney_turbo/doc
 !plugins/midjourney_turbo/lib
@@ -40,4 +40,6 @@ plugins/banwords/lib/__pycache__
 test
 *.db
 channel/weworktop/last_key.txt
-plugins/godcmd/godcmd.py
+
+
+
