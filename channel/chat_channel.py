@@ -226,6 +226,7 @@ class ChatChannel(Channel):
             )
             reply = e_context["reply"]
             desire_rtype = context.get("desire_rtype")
+            logger.debug(f"context:{context}")
             if not e_context.is_pass() and reply and reply.type:
                 if reply.type in self.NOT_SUPPORT_REPLYTYPE:
                     logger.error("[WX]reply type not support: " + str(reply.type))
@@ -256,6 +257,8 @@ class ChatChannel(Channel):
                 elif reply.type == ReplyType.InviteRoom:
                     pass
                 elif reply.type == ReplyType.TEXT_:
+                    pass
+                elif reply.type == ReplyType.FILE:
                     pass
                 elif reply.type == ReplyType.MINIAPP:
                     pass
