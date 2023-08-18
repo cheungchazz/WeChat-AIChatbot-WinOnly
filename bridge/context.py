@@ -8,6 +8,7 @@ class ContextType(Enum):
     VOICE = 2  # 音频消息
     IMAGE = 3  # 图片消息
     FILE = 4  # 文件信息
+    VIDEO = 5  # 视频信息
 
     IMAGE_CREATE = 10  # 创建图片命令
     JOIN_GROUP = 20  # 加入群聊
