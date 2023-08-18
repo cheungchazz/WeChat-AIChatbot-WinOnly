@@ -16,6 +16,7 @@ import requests
 import io
 import plugins
 
+from tenacity import retry, stop_after_attempt, wait_fixed
 from PIL import Image
 from plugins.midjourney_turbo.lib.midJourney_module import MidJourneyModule
 from bridge.context import ContextType
@@ -61,19 +62,21 @@ def format_content(content):
 
 
 # 根据内容生成提示信息
+@retry(stop=stop_after_attempt(5), wait=wait_fixed(2))
 def generate_prompt(content, api_key, api_base):
     openai.api_key = api_key
     openai.api_base = api_base
-    # 创建提示信息的内容
-    message_content = "请根据AI生图关键词'{}'预测想要得到的画面，然后用英文拓展描述、丰富细节、添加关键词描述以适用于AI生图。描述要简短直接突出重点，请把优化后的描述直接返回，不需要多余的语言！".format(
-        content)
-    # 创建一个openai聊天完成的对象，并获取返回的内容
-    completion = openai.ChatCompletion.create(model=conf().get("model"), messages=[
-        {"role": "user", "content": message_content}], max_tokens=300, temperature=0.8, top_p=0.9)
-    prompt = completion['choices'][0]['message']['content']
-    logger.debug("优化后的关键词：{}".format(prompt))
-    return prompt
-
+    try:
+        message_content = "请根据AI生图关键词'{}'预测想要得到的画面，然后用英文拓展描述、丰富细节、添加关键词描述以适用于AI生图。描述要简短直接突出重点，请把优化后的描述直接返回，不需要多余的语言！".format(
+            content)
+        completion = openai.ChatCompletion.create(model=conf().get("model", "gpt-3.5-turbo"), messages=[
+            {"role": "user", "content": message_content}], max_tokens=300, temperature=0.8, top_p=0.9)
+        prompt = completion['choices'][0]['message']['content']
+        logger.debug("优化后的关键词：{}".format(prompt))
+        return prompt
+    except Exception as e:
+        logger.warning(f"生成提示信息失败，重试中。错误信息: {str(e)}")
+        raise e
 
 # 将图片转换为base64编码的字符串
 def convert_base64(image):
