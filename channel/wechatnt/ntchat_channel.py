@@ -267,4 +267,6 @@ class NtchatChannel(ChatChannel):
         elif reply.type == ReplyType.VOICE:
             wechatnt.send_file(receiver, reply.content)
             logger.info("[WX] sendFile={}, receiver={}".format(reply.content, receiver))
-
+        elif reply.type == ReplyType.MINIAPP:
+            wechatnt.send_xml(receiver, reply.content)
+            logger.info("[WX] sendFile={}, receiver={}".format(reply.content, receiver))
