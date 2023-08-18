@@ -33,7 +33,7 @@ def get_room_info(conversation_id):
     return None
 
 
-def cdn_download(api_client, data, file_name):
+def cdn_download(guid, api_client, data, file_name):
     url = data["cdn"]["url"]
     auth_key = data["cdn"]["auth_key"]
     aes_key = data["cdn"]["aes_key"]
@@ -43,7 +43,7 @@ def cdn_download(api_client, data, file_name):
     current_dir = os.getcwd()
     save_path = os.path.join(current_dir, "tmp", file_name)
 
-    result = api_client.wx_cdn_download(url, auth_key, aes_key, file_size, save_path)
+    result = api_client.wx_cdn_download(guid, url, auth_key, aes_key, file_size, save_path)
     logger.debug(result)
 
 
@@ -99,17 +99,23 @@ class WeworkMessage(ChatMessage):
                 self.content = os.path.join(current_dir, "tmp", file_name_2)
                 self._prepare_fn = lambda: c2c_download_and_convert(guid, self.api_client, data, file_name)
             elif message["type"] == 11042:  # 图片消息类型，需要下载文件
-                file_name = data["cdn"]["file_name"]
+                file_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S') + ".jpg"
                 current_dir = os.getcwd()
                 self.ctype = ContextType.IMAGE
                 self.content = os.path.join(current_dir, "tmp", file_name)
-                self._prepare_fn = lambda: cdn_download(self.api_client, data, file_name)
+                self._prepare_fn = lambda: cdn_download(guid, self.api_client, data, file_name)
             elif message["type"] == 11045:  # 文件消息类型，需要下载文件
                 file_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S') + ".jpg"
                 current_dir = os.getcwd()
                 self.ctype = ContextType.FILE
                 self.content = os.path.join(current_dir, "tmp", file_name)
-                self._prepare_fn = lambda: cdn_download(self.api_client, data, file_name)
+                self._prepare_fn = lambda: cdn_download(guid, self.api_client, data, file_name)
+            elif message["type"] == 11043:  # 视频消息类型，需要下载文件
+                file_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S') + ".mp4"
+                current_dir = os.getcwd()
+                self.ctype = ContextType.VIDEO
+                self.content = os.path.join(current_dir, "tmp", file_name)
+                self._prepare_fn = lambda: cdn_download(guid, self.api_client, data, file_name)
             elif message["type"] == 11072:  # 新成员入群通知
                 self.ctype = ContextType.JOIN_GROUP
                 member_list = message['data']['member_list']
