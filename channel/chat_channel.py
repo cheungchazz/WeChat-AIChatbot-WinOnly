@@ -211,6 +211,8 @@ class ChatChannel(Channel):
                         return
             elif context.type == ContextType.IMAGE:  # 图片消息，当前无默认逻辑
                 pass
+            elif context.type == ContextType.FUNCTION:
+                pass
             else:
                 logger.error("[WX] unknown context type: {}".format(context.type))
                 return
