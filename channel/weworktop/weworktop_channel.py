@@ -136,7 +136,7 @@ def accept_friend_with_delay(guid, user_id, corp_id):
 
 @register_handler
 def all_msg_handler(message):
-    if message["message"]["type"] in [11041, 11044, 11042, 11043, 11045, 11072]:
+    if message["message"]["type"] in [11041, 11044, 11042, 11043, 11045, 11047, 11072]:
         data = message['message']['data']
         conversation_id = data.get('conversation_id', data.get('room_conversation_id'))
         if conversation_id is not None:

@@ -141,6 +141,9 @@ class WeworkMessage(ChatMessage):
                     with open(os.path.join(directory, 'wework_room_members.json'), 'w', encoding='utf-8') as f:
                         json.dump(result, f, ensure_ascii=False, indent=4)
                     logger.info("有新成员加入，已自动更新群成员列表缓存！")
+            elif message["type"] == 11047:  # 链接分享通知
+                self.ctype = ContextType.FUNCTION
+                self.content = message['data']['url']
             else:
                 raise NotImplementedError(
                     "Unsupported message type: guid:{} MsgType:{}".format(guid, message["type"]))

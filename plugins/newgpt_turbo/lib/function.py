@@ -296,7 +296,7 @@ def music_search(api_key, keyword):
                 "song_name": song_name,
                 "artists": artists,
                 "duration": duration,
-                "url": url,
+                "url": f"[{url}]"
             })
 
         return result
