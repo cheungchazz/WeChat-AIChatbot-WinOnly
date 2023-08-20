@@ -17,7 +17,8 @@ __date__ = '2023.6.21'
 
 def get_url(url):
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 "
+                      "Safari/537.36"
     }
 
     try:
@@ -31,7 +32,6 @@ def get_url(url):
     except requests.exceptions.RequestException as e:
         logger.warning("无法访问该URL: %s, error: %s", url, str(e))
         return None
-
 
 
 def build_search_url(searchTerms, base_url, count=None, startIndex=None, language=None, cx=None, hq=None,
