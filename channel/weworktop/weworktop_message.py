@@ -4,6 +4,7 @@ import os
 import re
 import pilk
 
+from retrying import retry
 from bridge.context import ContextType
 from channel.chat_message import ChatMessage
 from common.log import logger
@@ -55,13 +56,21 @@ def c2c_download_and_convert(guid, api_client, data, file_name):
 
     current_dir = os.getcwd()
     save_path = os.path.join(current_dir, "tmp", file_name)
-    result = api_client.c2c_cdn_download(guid, file_id, aes_key, file_size, file_type, save_path)
-    logger.debug(result)
 
-    # 在下载完SILK文件之后，立即将其转换为WAV文件
-    base_name, _ = os.path.splitext(save_path)
-    wav_file = base_name + ".wav"
-    pilk.silk_to_wav(save_path, wav_file, rate=24000)
+    @retry(stop_max_attempt_number=3, wait_fixed=2000)  # 最多重试3次，每次重试间隔2秒
+    def download_and_convert():
+        result = api_client.c2c_cdn_download(guid, file_id, aes_key, file_size, file_type, save_path)
+        logger.debug(result)
+
+        # 在下载完SILK文件之后，立即将其转换为WAV文件
+        base_name, _ = os.path.splitext(save_path)
+        wav_file = base_name + ".wav"
+        pilk.silk_to_wav(save_path, wav_file, rate=24000)
+
+    try:
+        download_and_convert()
+    except Exception as e:
+        logger.error(f"下载或转换文件失败：{e}")
 
 
 class WeworkMessage(ChatMessage):
