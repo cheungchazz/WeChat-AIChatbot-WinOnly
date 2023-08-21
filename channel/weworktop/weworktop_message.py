@@ -4,10 +4,10 @@ import os
 import re
 import pilk
 
-from retrying import retry
 from bridge.context import ContextType
 from channel.chat_message import ChatMessage
 from common.log import logger
+from config import conf
 
 LOGIN_INFO_CACHE = {}
 
@@ -56,21 +56,13 @@ def c2c_download_and_convert(guid, api_client, data, file_name):
 
     current_dir = os.getcwd()
     save_path = os.path.join(current_dir, "tmp", file_name)
+    result = api_client.c2c_cdn_download(guid, file_id, aes_key, file_size, file_type, save_path)
+    logger.debug(result)
 
-    @retry(stop_max_attempt_number=3, wait_fixed=2000)  # 最多重试3次，每次重试间隔2秒
-    def download_and_convert():
-        result = api_client.c2c_cdn_download(guid, file_id, aes_key, file_size, file_type, save_path)
-        logger.debug(result)
-
-        # 在下载完SILK文件之后，立即将其转换为WAV文件
-        base_name, _ = os.path.splitext(save_path)
-        wav_file = base_name + ".wav"
-        pilk.silk_to_wav(save_path, wav_file, rate=24000)
-
-    try:
-        download_and_convert()
-    except Exception as e:
-        logger.error(f"下载或转换文件失败：{e}")
+    # 在下载完SILK文件之后，立即将其转换为WAV文件
+    base_name, _ = os.path.splitext(save_path)
+    wav_file = base_name + ".wav"
+    pilk.silk_to_wav(save_path, wav_file, rate=24000)
 
 
 class WeworkMessage(ChatMessage):
@@ -151,8 +143,13 @@ class WeworkMessage(ChatMessage):
                         json.dump(result, f, ensure_ascii=False, indent=4)
                     logger.info("有新成员加入，已自动更新群成员列表缓存！")
             elif message["type"] == 11047:  # 链接分享通知
-                self.ctype = ContextType.FUNCTION
-                self.content = message['data']['url']
+                self.ctype = ContextType.TEXT
+                if self.is_group:
+                    group_chat_prefix = conf().get("group_chat_prefix")
+                    first_value = group_chat_prefix[0] if group_chat_prefix else ""
+                    self.content = first_value + "访问链接：" + message['data']['url']
+                else:
+                    self.content = "访问链接：" + message['data']['url']
             else:
                 raise NotImplementedError(
                     "Unsupported message type: guid:{} MsgType:{}".format(guid, message["type"]))
