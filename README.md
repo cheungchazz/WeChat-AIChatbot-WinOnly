@@ -244,6 +244,24 @@ pip install ntwork
 
 ## **交流群**
 
-![](https://github.com/chazzjimel/chatgpt-on-wechat/blob/master/docs/images/bot.jpg)
+![](https://github.com/chazzjimel/WeChat-AIChatbot-WinOnly/blob/main/docs/images/bot.jpg)
 
 添加bot，发送  **进群：【一胜Net】AIGC交流** 给bot即可
+
+
+
+## 硬核功能展示
+
+![](https://github.com/chazzjimel/WeChat-AIChatbot-WinOnly/blob/main/docs/images/001.png)
+
+![](https://github.com/chazzjimel/WeChat-AIChatbot-WinOnly/blob/main/docs/images/002.png)
+
+![](https://github.com/chazzjimel/WeChat-AIChatbot-WinOnly/blob/main/docs/images/003.png)
+
+![](https://github.com/chazzjimel/WeChat-AIChatbot-WinOnly/blob/main/docs/images/004.png)
+
+![](https://github.com/chazzjimel/WeChat-AIChatbot-WinOnly/blob/main/docs/images/005.png)
+
+![](https://github.com/chazzjimel/WeChat-AIChatbot-WinOnly/blob/main/docs/images/006.png)
+
+![](https://github.com/chazzjimel/WeChat-AIChatbot-WinOnly/blob/main/docs/images/007.png)
