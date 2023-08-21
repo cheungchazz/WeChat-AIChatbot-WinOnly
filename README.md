@@ -6,16 +6,16 @@
 
 - [x] **WeworkTop**：PC端的企微个人号消息通道（开发中），搭配wework-api软件（进群拿）
 
-  **基础版：**
+  **基础版API：**
 
   - [x] 发送消息：文本/图片/视频/文件/群聊@/链接卡片/GIF
   - [x] 接收消息：All
   - [x] 其他功能：同意加好友请求/创建群/添加好友入群/邀请好友入群/退出群聊
   - [ ] 短板缺陷：无法发送语音条信息
 
-  **付费版：**
+  **付费版API：**
 
-  - [x] 全功能
+  - [x] 全功能，适用于高度定制需求
 
 - [x] **Wework**：PC端的企微个人号消息通道，依赖 [ntwork](https://github.com/chazzjimel/ntwork)，限制[WeCom_4.0.8.6027版本](https://dldir1.qq.com/wework/work_weixin/WeCom_4.0.8.6027.exe)，**只能在Win平台运行项目**。
 
