@@ -106,7 +106,7 @@ class WeworkMessage(ChatMessage):
                 self.content = os.path.join(current_dir, "tmp", file_name)
                 self._prepare_fn = lambda: cdn_download(guid, self.api_client, data, file_name)
             elif message["type"] == 11045:  # 文件消息类型，需要下载文件
-                file_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S') + ".jpg"
+                file_name = data["cdn"]["file_name"]
                 current_dir = os.getcwd()
                 self.ctype = ContextType.FILE
                 self.content = os.path.join(current_dir, "tmp", file_name)
