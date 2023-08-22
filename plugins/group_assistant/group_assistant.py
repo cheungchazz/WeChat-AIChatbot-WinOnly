@@ -79,7 +79,7 @@ class GroupAssistant(Plugin):
                 reply.content = "进群指令有误，请使用：分隔！"
 
             # 如果分割后的列表长度大于1，说明"："或":"存在于content中
-            if len(parts) > 1:
+            if parts is not None and len(parts) > 1:
                 # 获取"："后面的部分，即群名，使用strip函数去除可能存在的首尾空格
                 group_name = parts[1].strip()
                 # 从self.config中获取对应的值
