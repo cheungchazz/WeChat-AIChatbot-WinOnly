@@ -71,7 +71,7 @@ class WeworkMessage(ChatMessage):
             super().__init__(message)
             data = message['message']['data']
             logger.debug(f"message data:{data}")
-            guid = message['guid']
+            self.guid = guid = message['guid']
             logger.debug(f"message type：{message['message']['type']}   message guid:{guid}")
             message = message['message']
             self.msg_id = data.get('conversation_id', data.get('room_conversation_id'))
