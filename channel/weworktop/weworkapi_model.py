@@ -148,7 +148,8 @@ class MyApiClient:
         return requests.post(f"{self.base_url}/contacts/accept",
                              json={"guid": guid, "user_id": user_id, "corp_id": corp_id}).json()
 
-    def send_miniapp(self, guid: str, conversation_id, aes_key, file_id, size, appicon, appid, appname, page_path, title,
+    def send_miniapp(self, guid: str, conversation_id, aes_key, file_id, size, appicon, appid, appname, page_path,
+                     title,
                      username):
         """
         发送小程序
@@ -178,3 +179,33 @@ class MyApiClient:
         """
         return requests.post(f"{self.base_url}/rooms/exit",
                              json={"guid": guid, "room_conversation_id": room_conversation_id}).json()
+
+    def gpt_function_call(self, content: str):
+        """
+        函数调用
+        """
+        return requests.post(f"{self.base_url}/gpt/function-call", json={"content": content}).json()
+
+    def gpt_get_url(self, guid: str, conversation_id: str, name: str, url: str, format_: str, group):
+        """
+        解析URL
+        """
+        return requests.post(f"{self.base_url}/gpt/get-url",
+                             json={"guid": guid, "conversation_id": conversation_id, "name": name, "url": url,
+                                   "format_": format_, "group": group}).json()
+
+    def gpt_google_search(self, guid: str, conversation_id: str, name: str, search_terms: str, format_: str, group):
+        """
+        谷歌搜索
+        """
+        return requests.post(f"{self.base_url}/gpt/search-summary",
+                             json={"guid": guid, "conversation_id": conversation_id, "name": name,
+                                   "search_terms": search_terms, "format_": format_, "group": group}).json()
+
+    def gpt_file_parsing(self, guid: str, conversation_id: str, name: str, file_path: str,  group):
+        """
+        谷歌搜索
+        """
+        return requests.post(f"{self.base_url}/gpt/file-parsing",
+                             json={"guid": guid, "conversation_id": conversation_id, "name": name,
+                                   "file_path": file_path, "group": group}).json()
