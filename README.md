@@ -135,7 +135,7 @@ pip3 install azure-cognitiveservices-speech
   # 订阅消息，公众号和企业微信channel中请填写，当被订阅时会自动回复，可使用特殊占位符。目前支持的占位符有{trigger_prefix}，在程序中它会自动替换成bot的触发词。
   "subscribe_msg": "感谢您的关注！\n这里是ChatGPT，可以自由对话。\n支持语音对话。\n支持图片输出，画字开头的消息将按要求创作图片。\n支持角色扮演和文字冒险等丰富插件。\n输入{trigger_prefix}#help 查看详细指令。",
   "accept_friend": false,                                     # 配置itchat和ntchat自动通过好友请求
-  "channel_type": "wx",#通道类型，支持：{wx,wxy,terminal,wechatmp,wechatmp_service,wechatcom_app,ntchat,wework}
+  "channel_type": "wx",#通道类型，支持：{ntchat,wework,weowrktop}
   "fast_gpt": false,                                           # 标识模型接口是否是fastgpt
   "ntchat_smart": false,                                    # 配置ntchat多开，为true时接管当前已登录微信，默认true
   "wework_smart": false,                                 # 配置wework多开，为true时接管当前已登录企业微信，默认true
