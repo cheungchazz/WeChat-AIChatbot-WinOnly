@@ -76,10 +76,8 @@ class AzureVoice(Voice):
         return reply
 
     def textToVoice(self, text):
-        if textContainsEmoji(text):
-            logger.info(f"{text}\n内容包含特殊字符或表情符号,采用强制文本回复方式！")
-            reply = Reply(ReplyType.TEXT_, text)
-            return reply
+        text = re.sub(r'[^\u4e00-\u9fa5\u3040-\u30FF\uAC00-\uD7AFa-zA-Z0-9'
+                      r'äöüÄÖÜáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛçÇñÑ，。！？,.]', '', text)
         if self.config.get("auto_detect"):
             lang = classify(text)[0]
             key = "speech_synthesis_" + lang
