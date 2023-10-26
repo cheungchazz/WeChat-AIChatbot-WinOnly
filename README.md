@@ -244,11 +244,7 @@ pip install ntwork
 
 4.运行 app.py
 
-## **交流群**
 
-![](https://github.com/chazzjimel/WeChat-AIChatbot-WinOnly/blob/main/docs/images/bot.jpg)
-
-添加bot，发送  **进群：【一胜Net】AIGC交流** 给bot即可
 
 
 
